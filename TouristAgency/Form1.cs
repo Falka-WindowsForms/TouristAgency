@@ -70,5 +70,60 @@ namespace TouristAgency
         {
             LoadCountries();
         }
+
+        private void editCountry_button_Click(object sender, EventArgs e)
+        {
+            string countryName = "";
+            if (CountriesList.SelectedIndex != -1)
+            {
+                if (CountriesList?.SelectedIndex != -1)
+                    countryName = CountriesList?.SelectedItem.ToString();
+                else
+                    return;
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE_COUNTRY", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@OldName", SqlDbType.VarChar).Value = countryName;
+                cmd.Parameters.Add("@NewName", SqlDbType.VarChar).Value = countryField.Text;
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                LoadCountries();
+                MessageBox.Show("Country updated", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Item not selected", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+        }
+
+        private void delCountry_button_Click(object sender, EventArgs e)
+        {
+            string countryName = "";
+            if (CountriesList.SelectedIndex!=-1)
+            {
+                if (CountriesList?.SelectedIndex != -1)
+                    countryName = CountriesList?.SelectedItem.ToString();
+                else
+                    return;
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("DELETE_COUNTRY", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("@Country", SqlDbType.VarChar).Value = countryName;
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                LoadCountries();
+                MessageBox.Show("Country deleted", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Item not selected", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void CountriesList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
